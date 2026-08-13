@@ -33,7 +33,7 @@ voice_keys = {
 
 VOICE_BEING_USED = voice_keys['WNM'] # using a research-typical voice to start
 
-words = ['Testing', "Carm"]
+words = ['Testing', "Tebble"]
 
 for word in words:
     response = client.text_to_speech.convert(
