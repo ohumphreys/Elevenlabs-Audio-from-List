@@ -31,6 +31,7 @@ voice_keys = {
 
 # VOICE_BEING_USED = voice_keys['WNM']
 VOICE_BEING_USED = 'JBFqnCBsd6RMkjVDRZzb' # temporarily testing with a free voice
+FOLDER_PREFIX = "test"
 
 
 
@@ -57,7 +58,7 @@ for word in words:
         ],
     )
 
-    with open(f'output/{word}.mp3', 'wb') as f:
+    with open(f'output/{FOLDER_PREFIX}/{word}.mp3', 'wb') as f:
         for chunk in response:
             f.write(chunk)
             
