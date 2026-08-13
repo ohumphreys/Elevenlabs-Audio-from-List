@@ -24,48 +24,43 @@ voice_keys = {
     'WNF' : 'l4Coq6695JDX9xtLqXDE', # White, Non-Southern, Female - 'Lauren'
 }
 
-
 # This is a test block that makes sure I got all of the voice keys right
 # # for name in voice_keys.keys():
 # #     print(name)
 # #     print(client.voices.get(voice_keys[name]).name)
 
-
 # VOICE_BEING_USED = voice_keys['WNM']
-VOICE_BEING_USED = 'JBFqnCBsd6RMkjVDRZzb', # temporarily testing with a free voice
+VOICE_BEING_USED = 'JBFqnCBsd6RMkjVDRZzb' # temporarily testing with a free voice
 
-# with open("pronunciation_guide.pls", "rb") as f:
-#     pronunciation_dictionary = client.pronunciation_dictionaries.create_from_file(
-#         file=f.read(), name="Pseudoword Dictionary"
-#     )
 
-pronunciation_dictionary = client.pronunciation_dictionaries.get('y94uKypoHq7oFFtu8A1U')
 
-print(pronunciation_dictionary.name)
-print(pronunciation_dictionary.rules)
-print(pronunciation_dictionary.id)
-print(pronunciation_dictionary.latest_version_id)
+# pronunciation dictionary of pseudowords that I set up on my account
+pro_dict = client.pronunciation_dictionaries.get('y94uKypoHq7oFFtu8A1U') 
 
-# words = ['Normal', 'Changed']
 
-# for word in words:
-#     response = client.text_to_speech.convert(
-#         text=word,
-#         voice_id=VOICE_BEING_USED,
-#         model_id="eleven_flash_v2",
-#         output_format='mp3_44100_64',
-#         # previous_text="Here is a word: ",
-#         # next_text=".",
-#         pronunciation_dictionary_locators=[
-#             PronunciationDictionaryVersionLocator(
-#                 pronunciation_dictionary_id=pronunciation_dictionary.id,
-#                 version_id=pronunciation_dictionary.version_id,
-#             )
-#         ],
-#     )
 
-#     with open(f'output/{word}.mp3', 'wb') as f:
-#         for chunk in response:
-#             f.write(chunk)
+words = ["Normal"]
+
+for word in words:
+    response = client.text_to_speech.convert(
+        text=word,
+        voice_id=VOICE_BEING_USED,
+        model_id="eleven_flash_v2",
+        output_format='mp3_44100_64',
+        previous_text="Here is a word: ",
+        next_text=".",
+        pronunciation_dictionary_locators=[
+            PronunciationDictionaryVersionLocator(
+                pronunciation_dictionary_id=pro_dict.id,
+                version_id=pro_dict.latest_version_id,
+            )
+        ],
+    )
+
+    with open(f'output/{word}.mp3', 'wb') as f:
+        for chunk in response:
+            f.write(chunk)
+            
+# end of file (:
 
 
