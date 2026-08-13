@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 client = ElevenLabs(
-    api_key=os.getenv('ELEVENLABS_API_KEY')
+    api_key=os.getenv('ELEVENLABS_API_KEY') # This is stored in a .env file that is loaded above
 )
 
 
@@ -26,9 +26,27 @@ voice_keys = {
 
 
 # This is a test block that makes sure I got all of the voice keys right
+# # for name in voice_keys.keys():
+# #     print(name)
+# #     print(client.voices.get(voice_keys[name]).name)
 
-for name in voice_keys.keys():
-    print(name)
-    print(client.voices.get(voice_keys[name]).name)
+
+VOICE_BEING_USED = voice_keys['WNM'] # using a research-typical voice to start
+
+words = ['Testing', "Carm"]
+
+for word in words:
+    response = client.text_to_speech.convert(
+        text=word,
+        voice_id='JBFqnCBsd6RMkjVDRZzb', # temporarily testing with a free voice
+        model_id="eleven_multilingual_v2",
+        output_format='mp3_44100_64',
+        previous_text="Here is a word: ",
+        next_text="."
+    )
+
+    with open(f'{word}.mp3', 'wb') as f:
+        for chunk in response:
+            f.write(chunk)
 
 
