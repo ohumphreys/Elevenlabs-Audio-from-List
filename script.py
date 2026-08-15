@@ -69,12 +69,12 @@ def record_word(word: str):
             f.write(chunk)
             
 
-FOLDER_PREFIX = "WNM/real/two syllable"
-with open('input/real_two_syllable.csv', newline='') as f:
-    words = [row[0] for row in csv.reader(f)]
+# FOLDER_PREFIX = "WNM/real/two syllable"
+# with open('input/real_two_syllable.csv', newline='') as f:
+#     words = [row[0] for row in csv.reader(f)]
 
-# FOLDER_PREFIX = "rerecords"
-# words = ['Sub']
+FOLDER_PREFIX = "rerecords"
+words = ['Subject', 'Standard']
 
 for word in words:
     record_word(word)
