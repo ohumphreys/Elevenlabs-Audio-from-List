@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 import os
+import csv
 from elevenlabs.client import ElevenLabs
-from elevenlabs import PronunciationDictionaryVersionLocator
+from elevenlabs import PronunciationDictionaryVersionLocator, VoiceSettings
 
 load_dotenv()
 
@@ -18,38 +19,43 @@ voice_keys = {
     'WSF' : 'qqKpdUwkD3h8VyDLKQyz', # White, Southern, Female - 'Cassie'
     'BSM' : '4m3xt3xfssayzO1e9shv', # Black, Southern, Male - 'Mr. Pete'
     'WSM' : 'D4xQvkd2SmpDZJ8sEwvA', # White, Southern, Male - 'Rhett Suton'
-    'BNM' : 'pQh9V7vKVWKF3pBFDSc5', # Black, Non-Southern, Male - 'Miles'
+    'BNM' : '6OzrBCQf8cjERkYgzSg8', # Black, Non-Southern, Male - 'Young Jamal'
     'BSF' : 'fLQhkOW7F9KVKAjYCbhr', # Black, Southern, Female - 'CiCi'
     'WNM' : 'ljX1ZrXuDIIRVcmiVSyR', # White, Non-Southern, Male - 'Michael'
     'WNF' : 'l4Coq6695JDX9xtLqXDE', # White, Non-Southern, Female - 'Lauren'
 }
 
-# This is a test block that makes sure I got all of the voice keys right
+# This is just used for testing
 # # for name in voice_keys.keys():
 # #     print(name)
 # #     print(client.voices.get(voice_keys[name]).name)
 
-# VOICE_BEING_USED = voice_keys['WNM']
-VOICE_BEING_USED = 'JBFqnCBsd6RMkjVDRZzb' # temporarily testing with a free voice
-FOLDER_PREFIX = "test"
+VOICE_BEING_USED = voice_keys['WNM']
+# VOICE_BEING_USED = 'JBFqnCBsd6RMkjVDRZzb' # temporarily testing with a free voice
 
 
 
 # pronunciation dictionary of pseudowords that I set up on my account
-pro_dict = client.pronunciation_dictionaries.get('y94uKypoHq7oFFtu8A1U') 
+pro_dict = client.pronunciation_dictionaries.get('4GgzLpWGrKPg1pz24qgj') 
+assert pro_dict.latest_version_id == 'DZ3zZE8nVMTctoMwHgun' # may have changed by time of use
 
+# pro_dict = client.pronunciation_dictionaries.get('y94uKypoHq7oFFtu8A1U') # different dictionary, used for testing
 
-
-words = ["Normal"]
-
-for word in words:
+def record_word(word: str):
+    
+    # correct capitalization for non-pseudowords
+    if (word[0] != '/'):
+        word = word.title()
+    
     response = client.text_to_speech.convert(
         text=word,
         voice_id=VOICE_BEING_USED,
         model_id="eleven_flash_v2",
-        output_format='mp3_44100_64',
-        previous_text="Here is a word: ",
+        language_code='en',
+        voice_settings=VoiceSettings(speed=0.8),
+        previous_text= "Here is a word, which I will pronounce slowly and clearly: ",
         next_text=".",
+        output_format='mp3_44100_128',
         pronunciation_dictionary_locators=[
             PronunciationDictionaryVersionLocator(
                 pronunciation_dictionary_id=pro_dict.id,
@@ -58,10 +64,19 @@ for word in words:
         ],
     )
 
-    with open(f'output/{FOLDER_PREFIX}/{word}.mp3', 'wb') as f:
+    with open(f'output/{FOLDER_PREFIX}/{word.strip("/")}.mp3', 'wb') as f:
         for chunk in response:
             f.write(chunk)
             
-# end of file (:
+
+FOLDER_PREFIX = "WNM/real/two syllable"
+with open('input/real_two_syllable.csv', newline='') as f:
+    words = [row[0] for row in csv.reader(f)]
+
+# FOLDER_PREFIX = "rerecords"
+# words = ['Sub']
+
+for word in words:
+    record_word(word)
 
 
