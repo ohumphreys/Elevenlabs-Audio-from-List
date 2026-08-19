@@ -67,12 +67,12 @@ def record_word(word: str):
             f.write(chunk)
             
 
-FOLDER_PREFIX = "BSF/pseudo/one syllable"
-with open('input/second_set/One Syllable Pseudo.csv', newline='') as f:
-    words = [row[0] for row in csv.reader(f)]
+# FOLDER_PREFIX = "BSF/pseudo/one syllable"
+# with open('input/second_set/One Syllable Pseudo.csv', newline='') as f:
+#     words = [row[0] for row in csv.reader(f)]
 
-# FOLDER_PREFIX = "rerecords"
-# words = ['Top']
+FOLDER_PREFIX = "rerecords"
+words = ['Square']
 
 for word in words:
     record_word(word)
