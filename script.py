@@ -30,7 +30,7 @@ voice_keys = {
 # #     print(name)
 # #     print(client.voices.get(voice_keys[name]).name)
 
-VOICE_BEING_USED = voice_keys['WNM']
+VOICE_BEING_USED = voice_keys['BSF']
 # VOICE_BEING_USED = 'JBFqnCBsd6RMkjVDRZzb' # temporarily testing with a free voice
 
 
@@ -53,8 +53,6 @@ def record_word(word: str):
         model_id="eleven_flash_v2",
         language_code='en',
         voice_settings=VoiceSettings(speed=0.8),
-        # previous_text= "Here is a word, which I will pronounce slowly and clearly: ",
-        # next_text=".",
         output_format='mp3_44100_128',
         pronunciation_dictionary_locators=[
             PronunciationDictionaryVersionLocator(
@@ -69,12 +67,12 @@ def record_word(word: str):
             f.write(chunk)
             
 
-# FOLDER_PREFIX = "WNM/pseudo/one syllable"
-# with open('input/pseudo_one_syllable_TEST.csv', newline='') as f:
-#     words = [row[0] for row in csv.reader(f)]
+FOLDER_PREFIX = "BSF/pseudo/one syllable"
+with open('input/second_set/One Syllable Pseudo.csv', newline='') as f:
+    words = [row[0] for row in csv.reader(f)]
 
-FOLDER_PREFIX = "rerecords"
-words = ['Top']
+# FOLDER_PREFIX = "rerecords"
+# words = ['Top']
 
 for word in words:
     record_word(word)
