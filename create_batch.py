@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 import csv
 import json
 
-INPUT_CSV = "input/two_syllable_pseudo_candidates.csv"
-OUTPUT_DIR = "output/Candidate Pseudowords/Two Syllable"
+INPUT_CSV = "input/Two Syllable Real.csv"
+OUTPUT_DIR = "output/GA/Real/Two Syllable"
 
-BATCH_NAME = "two_syllable_pseudo_candidates"
+BATCH_NAME = "GA_two_syllable_real"
 
 # only need to change the above for each request
 
@@ -26,7 +26,7 @@ client = genai.Client()
 
 # Read the word list
 with open(INPUT_CSV, newline="") as f:
-    words = [row[0] for row in csv.reader(f)]
+    words = [row[0].title() for row in csv.reader(f)]
 
 # Build one JSON per word and output it to our JSONL file
 key_to_word = {}

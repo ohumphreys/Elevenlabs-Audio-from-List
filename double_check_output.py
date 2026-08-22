@@ -3,7 +3,7 @@ import os
 
 word_set = set()
 
-with open('input/real_two_syllable.csv', newline='') as f:
+with open('input/Two Syllable Pseudo.csv', newline='') as f:
     for row in csv.reader(f):
         word = row[0].lower()
         if word in word_set:
@@ -12,11 +12,11 @@ with open('input/real_two_syllable.csv', newline='') as f:
         
 print(len(word_set))
 
-folder = 'output/WNM/real/two syllable'
-existing = {name.lower() for name in os.listdir(folder) if name.lower().endswith('.mp3')}
+folder = 'output/GA/Pseudo/Two Syllable'
+existing = {name.lower() for name in os.listdir(folder) if name.lower().endswith('.wav')}
 
 for word in word_set:
-    expected = f"{word.lower()}.mp3"
+    expected = f"{word.lower()}.wav"
     if expected not in existing:
         print(f"found no matching for {word}")
 

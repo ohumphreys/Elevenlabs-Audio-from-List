@@ -10,7 +10,7 @@ real_two = set()
 files = ['Counterbalance 1.csv', 'Counterbalance 2.csv', 'Counterbalance 3.csv', 'Counterbalance 4.csv', 'Identical Trials.csv', 'Practice Trials.csv']
 
 for file in files:
-    with open(f'input/Study Components/{file}', newline='') as rf:
+    with open(f'input/Study Trials/{file}', newline='') as rf:
         for row in csv.DictReader(rf):
             
             target_is_real = row['Target Type'] == 'real'
@@ -48,8 +48,6 @@ def output_csv(file_name, set, is_pseudo):
     with open(f'input/{file_name}.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for item in set:
-            if is_pseudo:
-                item = f"/{item}/"
             writer.writerow([item])
         
 output_csv('One Syllable Real', real_one, False)
