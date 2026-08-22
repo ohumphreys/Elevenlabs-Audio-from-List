@@ -1,3 +1,2 @@
-elevenlabs # TODO: remove this once its no longer needed
 python-dotenv
 google-genai

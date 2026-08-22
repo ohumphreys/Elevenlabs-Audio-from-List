@@ -30,43 +30,42 @@ output_dir = job_info["output_dir"]
 key_to_word = job_info["key_to_word"]
 
 batch_job = client.batches.get(name=job_name)
-state = batch_job.state.name
+state = batch_job.state.name # type: ignore
 print(f"Job state: {state}")
 
 if state == "JOB_STATE_SUCCEEDED":
     os.makedirs(output_dir, exist_ok=True)
 
-    result_file_name = batch_job.dest.file_name
-    print(f"Downloading results from {result_file_name}...")
-    file_content = client.files.download(file=result_file_name).decode("utf-8")
 
-    written = 0
+    result_file_name = batch_job.dest.file_name # type: ignore
+    file_content = client.files.download(file=result_file_name).decode("utf-8") # type: ignore
+
+    good = 0
     failed = []
     for line in file_content.splitlines():
+        
         if not line:
-            continue
+            continue # this deals with a trailing "" line without throwing an error
+        
         entry = json.loads(line)
         key = entry.get("key")
         word = key_to_word.get(key, key)
 
         if entry.get("response"):
-            parts = entry["response"]["candidates"][0]["content"]["parts"]
-            audio_part = next(
-                (p for p in parts if "inlineData" in p or "inline_data" in p),
-                None,
-            )
+            parts = entry["response"]["candidates"][0]["content"]["parts"] #this is just parsing the tree of the REST response
+            audio_part = next((p for p in parts if "inlineData" in p), None) #find the part of the response that has audio (strictly speaking just non-text bytes)
             if audio_part:
-                data_field = audio_part.get("inlineData") or audio_part.get("inline_data")
+                data_field = audio_part.get("inlineData")
                 pcm = base64.b64decode(data_field["data"])
                 filepath = os.path.join(output_dir, f"{word}.wav")
                 wave_file(filepath, pcm)
-                written += 1
+                good = good + 1
             else:
                 failed.append((word, "no audio in response"))
         elif entry.get("error"):
             failed.append((word, entry["error"]))
 
-    print(f"Wrote {written} WAV files to {output_dir}")
+    print(f"Wrote {good} WAV files to {output_dir}")
     if failed:
         print(f"{len(failed)} words failed:")
         for word, err in failed:
@@ -76,7 +75,7 @@ elif state == "JOB_STATE_FAILED":
     print(f"Job failed: {batch_job.error}")
 
 elif state in ("JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"):
-    print(f"Job ended without results: {state}")
+    print(f"Something went wrong: {state}")
 
 else:
     print("Still running - try again later.")
