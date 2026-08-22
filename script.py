@@ -30,10 +30,13 @@ def record_word(word, filepath):
             ]
         }
     )
-
-    wave_file(filepath, base64.b64decode(interaction.output_audio.data))
+    
+    wave_file(filepath, base64.b64decode(interaction.output_audio.data)) # type: ignore
     
 words = ["Pobe", "Aluminium Schedule"]
+
+# with open('input/second_set/One Syllable Pseudo.csv', newline='') as f:
+#     words = [row[0] for row in csv.reader(f)]
 
 for word in words:
     record_word(word, f'output/British/{word}.wav')
