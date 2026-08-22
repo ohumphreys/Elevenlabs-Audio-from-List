@@ -4,20 +4,22 @@ from dotenv import load_dotenv
 import csv
 import json
 
-INPUT_CSV = "input/Two Syllable Real.csv"
-OUTPUT_DIR = "output/GA/Real/Two Syllable"
+INPUT_CSV = "input/One Syllable Pseudo.csv"
+OUTPUT_DIR = "output/Southern/Pseudo/One Syllable"
 
-BATCH_NAME = "GA_two_syllable_real"
+BATCH_NAME = "Southern_one_syllable_pseudo"
 
-# only need to change the above for each request
+# only need to change the 3 above here for each batch
 
-MODEL = "gemini-3.1-flash-tts-preview"
-VOICE = "Zephyr"
+VOICE = "Enceladus"
+PROMPT = "Say the following word clearly in a southern american accent: "
 
-PROMPT = "Say the following word clearly in a general american accent: "
+# change the two above here to modify the condition
 
 REQUESTS_FILE = f"batch_data/{BATCH_NAME}_requests.jsonl"
 JOB_INFO_FILE = f"batch_data/{BATCH_NAME}_job_info.json"
+
+MODEL = "gemini-3.1-flash-tts-preview"
 
 
 load_dotenv() # This script requires an environment variable called GEMINI_API_KEY that has your gemini api key
