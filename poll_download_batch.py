@@ -1,0 +1,82 @@
+from google import genai
+from dotenv import load_dotenv
+import wave
+import base64
+import json
+import os
+
+load_dotenv() # Still requires a GEMINI_API_KEY environment variable
+
+BATCH_NAME = "test_batch"
+
+JOB_INFO_FILE = f"batch_data/{BATCH_NAME}_job_info.json"
+
+
+def wave_file(filename, pcm, channels=1, rate=24000, sample_width=2):
+    with wave.open(filename, "wb") as wf:
+        wf.setnchannels(channels)
+        wf.setsampwidth(sample_width)
+        wf.setframerate(rate)
+        wf.writeframes(pcm)
+
+
+client = genai.Client()
+
+with open(JOB_INFO_FILE) as f:
+    job_info = json.load(f)
+
+job_name = job_info["job_name"]
+output_dir = job_info["output_dir"]
+key_to_word = job_info["key_to_word"]
+
+batch_job = client.batches.get(name=job_name)
+state = batch_job.state.name
+print(f"Job state: {state}")
+
+if state == "JOB_STATE_SUCCEEDED":
+    os.makedirs(output_dir, exist_ok=True)
+
+    result_file_name = batch_job.dest.file_name
+    print(f"Downloading results from {result_file_name}...")
+    file_content = client.files.download(file=result_file_name).decode("utf-8")
+
+    written = 0
+    failed = []
+    for line in file_content.splitlines():
+        if not line:
+            continue
+        entry = json.loads(line)
+        key = entry.get("key")
+        word = key_to_word.get(key, key)
+
+        if entry.get("response"):
+            parts = entry["response"]["candidates"][0]["content"]["parts"]
+            audio_part = next(
+                (p for p in parts if "inlineData" in p or "inline_data" in p),
+                None,
+            )
+            if audio_part:
+                data_field = audio_part.get("inlineData") or audio_part.get("inline_data")
+                pcm = base64.b64decode(data_field["data"])
+                filepath = os.path.join(output_dir, f"{word}.wav")
+                wave_file(filepath, pcm)
+                written += 1
+            else:
+                failed.append((word, "no audio in response"))
+        elif entry.get("error"):
+            failed.append((word, entry["error"]))
+
+    print(f"Wrote {written} WAV files to {output_dir}")
+    if failed:
+        print(f"{len(failed)} words failed:")
+        for word, err in failed:
+            print(f"  {word}: {err}")
+
+elif state == "JOB_STATE_FAILED":
+    print(f"Job failed: {batch_job.error}")
+
+elif state in ("JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"):
+    print(f"Job ended without results: {state}")
+
+else:
+    print("Still running - try again later.")
