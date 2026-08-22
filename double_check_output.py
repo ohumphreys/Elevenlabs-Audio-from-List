@@ -3,7 +3,7 @@ import os
 
 word_set = set()
 
-with open('input/Two Syllable Pseudo.csv', newline='') as f:
+with open('input/Two Syllable Real.csv', newline='') as f:
     for row in csv.reader(f):
         word = row[0].lower()
         if word in word_set:
@@ -12,7 +12,7 @@ with open('input/Two Syllable Pseudo.csv', newline='') as f:
         
 print(len(word_set))
 
-folder = 'output/GA/Pseudo/Two Syllable'
+folder = 'output/GA/Real/Two Syllable'
 existing = {name.lower() for name in os.listdir(folder) if name.lower().endswith('.wav')}
 
 for word in word_set:
