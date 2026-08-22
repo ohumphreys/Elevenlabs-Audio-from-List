@@ -8,8 +8,8 @@ import os
 load_dotenv() # Still requires a GEMINI_API_KEY environment variable
 
 # BATCH_NAME = "test_batch"
-BATCH_NAME = "one_syllable_pseudo_candidates"
-# BATCH_NAME = "two_syllable_pseudo_candidates"
+# BATCH_NAME = "one_syllable_pseudo_candidates"
+BATCH_NAME = "two_syllable_pseudo_candidates"
 
 JOB_INFO_FILE = f"batch_data/{BATCH_NAME}_job_info.json"
 
