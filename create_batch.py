@@ -4,14 +4,17 @@ from dotenv import load_dotenv
 import csv
 import json
 
-INPUT_CSV = "input/one_syllable_pseudo_candidates.csv"
-OUTPUT_DIR = "output/Test Pseudowords/One Syllable"
+INPUT_CSV = "input/two_syllable_pseudo_candidates.csv"
+OUTPUT_DIR = "output/Candidate Pseudowords/Two Syllable"
+
+BATCH_NAME = "two_syllable_pseudo_candidates"
+
+# only need to change the above for each request
+
 MODEL = "gemini-3.1-flash-tts-preview"
 VOICE = "Zephyr"
 
 PROMPT = "Say the following word clearly in a general american accent: "
-
-BATCH_NAME = "test_batch"
 
 REQUESTS_FILE = f"batch_data/{BATCH_NAME}_requests.jsonl"
 JOB_INFO_FILE = f"batch_data/{BATCH_NAME}_job_info.json"
@@ -71,6 +74,7 @@ with open(JOB_INFO_FILE, "w") as f:
         "job_name": batch_job.name,
         "output_dir": OUTPUT_DIR,
         "key_to_word": key_to_word,
+        "batch_name_used": BATCH_NAME,
     }, f, indent=2)
 
 print(f"Saved job info to {JOB_INFO_FILE}.")

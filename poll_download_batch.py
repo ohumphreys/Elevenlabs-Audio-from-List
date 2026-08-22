@@ -7,7 +7,9 @@ import os
 
 load_dotenv() # Still requires a GEMINI_API_KEY environment variable
 
-BATCH_NAME = "test_batch"
+# BATCH_NAME = "test_batch"
+BATCH_NAME = "one_syllable_pseudo_candidates"
+# BATCH_NAME = "two_syllable_pseudo_candidates"
 
 JOB_INFO_FILE = f"batch_data/{BATCH_NAME}_job_info.json"
 
@@ -72,10 +74,4 @@ if state == "JOB_STATE_SUCCEEDED":
             print(f"  {word}: {err}")
 
 elif state == "JOB_STATE_FAILED":
-    print(f"Job failed: {batch_job.error}")
-
-elif state in ("JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"):
-    print(f"Something went wrong: {state}")
-
-else:
-    print("Still running - try again later.")
+    print(f"Job failed with this error: {batch_job.error}")
