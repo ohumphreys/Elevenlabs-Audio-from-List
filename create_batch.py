@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 import csv
 import json
 
-INPUT_CSV = "input/One Syllable Pseudo.csv"
-OUTPUT_DIR = "output/Southern/Pseudo/One Syllable"
+INPUT_CSV = "input/One Syllable Real.csv"
+OUTPUT_DIR = "output/Southern/Real/One Syllable"
 
-BATCH_NAME = "Southern_one_syllable_pseudo"
+BATCH_NAME = "Southern_one_syllable_real"
 
 # only need to change the 3 above here for each batch
 
